@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { X } from '@phosphor-icons/react';
 import { CartSideBarContainer, CartSummary } from './styles';
 import Image from 'next/image';
@@ -10,10 +11,25 @@ interface CartSideBarProps {
 }
 
 export function CartSideBar({ isOpen, onClose }: CartSideBarProps) {
-  const { products, productsQuantity, productsTotalValue } = useCart();
+  const { products, productsQuantity, productsTotalValue, removeProduct } =
+    useCart();
+  const cartRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (cartRef.current && !cartRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onClose]);
 
   return (
-    <CartSideBarContainer className={isOpen ? 'showCart' : ''}>
+    <CartSideBarContainer ref={cartRef} className={isOpen ? 'showCart' : ''}>
       <button onClick={onClose}>
         <X size={24} weight="bold" />
       </button>
@@ -28,7 +44,9 @@ export function CartSideBar({ isOpen, onClose }: CartSideBarProps) {
                 <strong>{product.price}</strong>
               </div>
               <div>
-                <button>Remover</button>
+                <button onClick={() => removeProduct(product.id)}>
+                  Remover
+                </button>
               </div>
             </div>
           </li>

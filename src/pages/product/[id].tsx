@@ -1,3 +1,4 @@
+import { useCart } from '@/contexts/CartContext';
 import { stripe } from '@/lib/stripe';
 import {
   ImageContainer,
@@ -24,25 +25,26 @@ interface ProductProps {
 }
 
 export default function Product({ product }: ProductProps) {
-  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
-    useState(false);
+  const { addProduct, openCartSideBar } = useCart();
 
-  async function handleBuyProduct() {
-    try {
-      setIsCreatingCheckoutSession(true);
+  async function handlePutOnCart() {
+    addProduct(product);
+    openCartSideBar();
+    // try {
+    //   setIsCreatingCheckoutSession(true);
 
-      const response = await axios.post('/api/checkout', {
-        priceId: product.defaultPriceId,
-      });
+    //   const response = await axios.post('/api/checkout', {
+    //     priceId: product.defaultPriceId,
+    //   });
 
-      const { checkoutUrl } = response.data;
+    //   const { checkoutUrl } = response.data;
 
-      window.location.href = checkoutUrl;
-    } catch (error) {
-      // Connect to observability service
-      setIsCreatingCheckoutSession(false);
-      alert('Falha ao redirecionar ao checkout!');
-    }
+    //   window.location.href = checkoutUrl;
+    // } catch (error) {
+    //   // Connect to observability service
+    //   setIsCreatingCheckoutSession(false);
+    //   alert('Falha ao redirecionar ao checkout!');
+    // }
   }
 
   return (
@@ -61,12 +63,7 @@ export default function Product({ product }: ProductProps) {
 
           <p>{product.description}</p>
 
-          <button
-            disabled={isCreatingCheckoutSession}
-            onClick={handleBuyProduct}
-          >
-            Comprar agora
-          </button>
+          <button onClick={handlePutOnCart}>Colocar na sacola</button>
         </ProductDetails>
       </ProductContainer>
     </>

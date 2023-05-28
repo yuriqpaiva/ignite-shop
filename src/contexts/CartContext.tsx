@@ -12,6 +12,10 @@ interface CartContextProps {
   addProduct: (product: Product) => void;
   productsQuantity: number;
   productsTotalValue: string;
+  removeProduct: (productId: string) => void;
+  isCartSideBarOpen: boolean;
+  openCartSideBar: () => void;
+  closeCartSideBar: () => void;
 }
 
 const CartContext = createContext({} as CartContextProps);
@@ -21,6 +25,16 @@ interface CartProviderProps {
 }
 
 export function CartProvider({ children }: CartProviderProps) {
+  const [isCartSideBarOpen, setIsCartSideBarOpen] = useState(false);
+
+  function openCartSideBar() {
+    setIsCartSideBarOpen(true);
+  }
+
+  function closeCartSideBar() {
+    setIsCartSideBarOpen(false);
+  }
+
   const [products, setProducts] = useState<Product[]>([]);
   const productsQuantity = products.length;
   const productsTotalValue = new Intl.NumberFormat('pt-BR', {
@@ -52,9 +66,31 @@ export function CartProvider({ children }: CartProviderProps) {
     }
   }
 
+  function removeProduct(productId: string) {
+    const existingProductIndex = products.findIndex(
+      (product) => product.id === productId
+    );
+
+    if (existingProductIndex !== -1) {
+      const updatedProducts = [...products];
+      updatedProducts.splice(existingProductIndex, 1);
+
+      setProducts(updatedProducts);
+    }
+  }
+
   return (
     <CartContext.Provider
-      value={{ products, addProduct, productsQuantity, productsTotalValue }}
+      value={{
+        products,
+        addProduct,
+        productsQuantity,
+        productsTotalValue,
+        removeProduct,
+        isCartSideBarOpen,
+        openCartSideBar,
+        closeCartSideBar,
+      }}
     >
       {children}
     </CartContext.Provider>
