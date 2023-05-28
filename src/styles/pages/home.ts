@@ -45,14 +45,35 @@ export const Product = styled('div', {
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
 
     strong: {
+      marginBottom: '0.25rem',
       color: '$gray100',
       fontSize: '$lg',
+      overflow: 'hidden',
+      display: '-webkit-box',
+      '-webkit-box-orient': 'vertical',
+      '-webkit-line-clamp': 1,
     },
 
     span: {
       fontSize: '$xl',
       fontWeight: 'bold',
       color: '$green300',
+    },
+
+    button: {
+      lineHeight: 0,
+      backgroundColor: '$green500',
+      border: 0,
+      color: '$white',
+      borderRadius: 8,
+      padding: '0.75rem',
+      cursor: 'pointer',
+      fontWeight: 'bold',
+      fontSize: '$md',
+
+      '&:not(:disabled):hover': {
+        backgroundColor: '$green300',
+      },
     },
   },
 

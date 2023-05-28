@@ -13,4 +13,27 @@ export const Header = styled('header', {
   width: '100%',
   maxWidth: 1180,
   margin: '0 auto',
+
+  display: 'flex',
+  justifyContent: 'space-between',
+
+  button: {
+    backgroundColor: '$gray800',
+    border: 0,
+    color: '$white',
+    borderRadius: 8,
+    padding: '0.75rem',
+    cursor: 'pointer',
+    height: 48,
+
+    svg: {
+      fill: '$gray400',
+    },
+
+    '&:hover': {
+      svg: {
+        fill: '$white',
+      },
+    },
+  },
 });

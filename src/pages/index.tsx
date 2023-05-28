@@ -8,6 +8,9 @@ import { GetStaticProps } from 'next';
 import Stripe from 'stripe';
 import Link from 'next/link';
 import Head from 'next/head';
+import { Handbag } from '@phosphor-icons/react';
+import { useCart } from '@/contexts/CartContext';
+import { MouseEvent } from 'react';
 
 interface HomeProps {
   products: {
@@ -20,12 +23,22 @@ interface HomeProps {
 }
 
 export default function Home({ products }: HomeProps) {
+  const { addProduct } = useCart();
+
   const [sliderRef] = useKeenSlider({
     slides: {
       perView: 3,
       spacing: 48,
     },
   });
+
+  function handleAddProductToCart(
+    e: MouseEvent,
+    product: HomeProps['products'][0]
+  ) {
+    e.preventDefault();
+    addProduct(product);
+  }
 
   return (
     <>
@@ -42,8 +55,17 @@ export default function Home({ products }: HomeProps) {
             <Product className="keen-slider__slide">
               <Image src={product.imageUrl} width={520} height={480} alt="" />
               <footer>
-                <strong>{product.name}</strong>
-                <span>{product.price}</span>
+                <div>
+                  <strong>{product.name}</strong>
+                  <span>{product.price}</span>
+                </div>
+                <button
+                  onClick={(e) => {
+                    handleAddProductToCart(e, product);
+                  }}
+                >
+                  <Handbag weight="bold" color="#fff" size={32} />
+                </button>
               </footer>
             </Product>
           </Link>
