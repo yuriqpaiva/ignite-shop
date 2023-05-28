@@ -1,9 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { X } from '@phosphor-icons/react';
 import { CartSideBarContainer, CartSummary } from './styles';
 import Image from 'next/image';
-import shirt from '@/assets/camisetas/1.png';
 import { useCart } from '@/contexts/CartContext';
+import axios from 'axios';
 
 interface CartSideBarProps {
   isOpen: boolean;
@@ -11,6 +11,9 @@ interface CartSideBarProps {
 }
 
 export function CartSideBar({ isOpen, onClose }: CartSideBarProps) {
+  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
+    useState(false);
+
   const { products, productsQuantity, productsTotalValue, removeProduct } =
     useCart();
   const cartRef = useRef<HTMLDivElement>(null);
@@ -28,6 +31,22 @@ export function CartSideBar({ isOpen, onClose }: CartSideBarProps) {
     };
   }, [onClose]);
 
+  async function handleBuyProducts() {
+    try {
+      setIsCreatingCheckoutSession(true);
+
+      const response = await axios.post('/api/checkout', products);
+
+      const { checkoutUrl } = response.data;
+
+      window.location.href = checkoutUrl;
+    } catch (error) {
+      // Connect to observability service
+      setIsCreatingCheckoutSession(false);
+      alert('Falha ao redirecionar ao checkout!');
+    }
+  }
+
   return (
     <CartSideBarContainer ref={cartRef} className={isOpen ? 'showCart' : ''}>
       <button onClick={onClose}>
@@ -37,7 +56,7 @@ export function CartSideBar({ isOpen, onClose }: CartSideBarProps) {
       <ul>
         {products.map((product) => (
           <li key={product.id}>
-            <Image src={shirt} alt="" width={102} height={93} />
+            <Image src={product.imageUrl} alt="" width={102} height={93} />
             <div>
               <div>
                 <span>{product.name}</span>
@@ -62,7 +81,7 @@ export function CartSideBar({ isOpen, onClose }: CartSideBarProps) {
           <span>Valor total</span>
           <strong>{productsTotalValue}</strong>
         </div>
-        <button>Finalizar compra</button>
+        <button onClick={handleBuyProducts}>Finalizar compra</button>
       </CartSummary>
     </CartSideBarContainer>
   );

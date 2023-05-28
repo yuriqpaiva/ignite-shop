@@ -1,10 +1,12 @@
 import { ReactNode, createContext, useContext, useState } from 'react';
 
-interface Product {
+export interface Product {
   id: string;
   name: string;
   price: string;
+  imageUrl: string;
   quantity?: number;
+  defaultPriceId: string;
 }
 
 interface CartContextProps {
@@ -36,6 +38,8 @@ export function CartProvider({ children }: CartProviderProps) {
   }
 
   const [products, setProducts] = useState<Product[]>([]);
+  console.log(products);
+  
   const productsQuantity = products.length;
   const productsTotalValue = new Intl.NumberFormat('pt-BR', {
     style: 'currency',

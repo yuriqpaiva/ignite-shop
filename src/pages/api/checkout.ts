@@ -1,5 +1,6 @@
 import { stripe } from '@/lib/stripe';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { Product } from '@/contexts/CartContext';
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,10 +11,17 @@ export default async function handler(
     res.status(405).end('Method not allowed');
   }
 
-  const {priceId} = req.body;
+  const products = req.body as Product[];
 
-  if (!priceId) {
-    return res.status(400).json({ error: 'Price ID is required' });
+  const formattedProducts = products.map((product) => {
+    return {
+      price: product.defaultPriceId,
+      quantity: product.quantity,
+    };
+  });
+
+  if (!products) {
+    return res.status(400).json({ error: 'Products are required' });
   }
 
   const successUrl = `${process.env.NEXT_URL}/success?session_id={CHECKOUT_SESSION_ID}`;
@@ -23,12 +31,7 @@ export default async function handler(
     success_url: successUrl,
     cancel_url: cancelUrl,
     mode: 'payment',
-    line_items: [
-      {
-        price: priceId,
-        quantity: 1,
-      },
-    ],
+    line_items: formattedProducts,
   });
 
   return res.status(201).json({ checkoutUrl: checkoutSession.url });
