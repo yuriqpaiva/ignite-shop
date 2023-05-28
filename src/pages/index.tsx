@@ -24,7 +24,7 @@ interface HomeProps {
 }
 
 export default function Home({ products }: HomeProps) {
-  const { addProduct } = useCart();
+  const { addProduct, openCartSideBar } = useCart();
 
   const [sliderRef] = useKeenSlider({
     slides: {
@@ -39,6 +39,7 @@ export default function Home({ products }: HomeProps) {
   ) {
     e.preventDefault();
     addProduct(product);
+    openCartSideBar();
   }
 
   return (

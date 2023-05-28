@@ -28,27 +28,14 @@ export default function Product({ product }: ProductProps) {
   async function handlePutOnCart() {
     addProduct(product);
     openCartSideBar();
-    // try {
-    //   setIsCreatingCheckoutSession(true);
-
-    //   const response = await axios.post('/api/checkout', {
-    //     priceId: product.defaultPriceId,
-    //   });
-
-    //   const { checkoutUrl } = response.data;
-
-    //   window.location.href = checkoutUrl;
-    // } catch (error) {
-    //   // Connect to observability service
-    //   setIsCreatingCheckoutSession(false);
-    //   alert('Falha ao redirecionar ao checkout!');
-    // }
   }
+
+  const title = `${product.name} | Ignite Shop`;
 
   return (
     <>
       <Head>
-        <title>{product.name} | Ignite Shop</title>
+        <title>{title}</title>
       </Head>
       <ProductContainer>
         <ImageContainer>

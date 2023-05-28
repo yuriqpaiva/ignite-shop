@@ -38,7 +38,6 @@ export function CartProvider({ children }: CartProviderProps) {
   }
 
   const [products, setProducts] = useState<Product[]>([]);
-  console.log(products);
   
   const productsQuantity = products.length;
   const productsTotalValue = new Intl.NumberFormat('pt-BR', {
