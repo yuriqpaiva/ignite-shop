@@ -8,9 +8,9 @@ import { GetStaticProps } from 'next';
 import Stripe from 'stripe';
 import Link from 'next/link';
 import Head from 'next/head';
-import { Handbag } from '@phosphor-icons/react';
+import { CaretLeft, Handbag } from '@phosphor-icons/react';
 import { useCart } from '@/contexts/CartContext';
-import { MouseEvent } from 'react';
+import { MouseEvent, useState } from 'react';
 
 interface HomeProps {
   products: {
@@ -26,12 +26,24 @@ interface HomeProps {
 export default function Home({ products }: HomeProps) {
   const { addProduct, openCartSideBar } = useCart();
 
-  const [sliderRef] = useKeenSlider({
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [sliderRef, instanceRef] = useKeenSlider({
     slides: {
       perView: 3,
       spacing: 48,
     },
+    slideChanged(s) {
+      setCurrentSlide(s.track.details.rel);
+    },
   });
+
+  function handleArrowClick(direction: 'left' | 'right') {
+    if (direction === 'left') {
+      instanceRef.current?.prev();
+    } else {
+      instanceRef.current?.next();
+    }
+  }
 
   function handleAddProductToCart(
     e: MouseEvent,
@@ -42,12 +54,29 @@ export default function Home({ products }: HomeProps) {
     openCartSideBar();
   }
 
+  const restLength = products.length - currentSlide;
+
   return (
     <>
       <Head>
         <title>Home | Ignite Shop</title>
       </Head>
       <HomeContainer ref={sliderRef} className="keen-slider">
+        {currentSlide !== 0 && (
+          <div className="arrowButton">
+            <button onClick={() => handleArrowClick('left')}>
+              <CaretLeft weight="bold" size={48} />
+            </button>
+          </div>
+        )}
+        {restLength > 3 && (
+          <div className="arrowButton right">
+            <button onClick={() => handleArrowClick('right')}>
+              <CaretLeft weight="bold" size={48} />
+            </button>
+          </div>
+        )}
+
         {products.map((product) => (
           <Link
             key={product.id}

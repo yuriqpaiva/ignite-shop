@@ -6,6 +6,39 @@ export const HomeContainer = styled('main', {
   maxWidth: 'calc(100vw - ((100vw - 1180px) / 2))',
   marginLeft: 'auto',
   minHeight: 656,
+
+  '.arrowButton': {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+
+    zIndex: 1,
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    margin: 'auto 0',
+    background:
+      'linear-gradient(90deg, rgba(18, 18, 20, 0) 0%, rgba(18, 18, 20, 0.75) 100%)',
+    transform: 'matrix(-1, 0, 0, 1, 0, 0)',
+    width: 100,
+    border: 0,
+    svg: {
+      rotate: '180deg',
+      color: '$white',
+    },
+
+    button: {
+      cursor: 'pointer',
+      marginRight: '1rem',
+      backgroundColor: 'transparent',
+      border: 0,
+    },
+  },
+
+  '.right': {
+    right: 0,
+    transform: 'none',
+  },
 });
 
 export const Product = styled('div', {
