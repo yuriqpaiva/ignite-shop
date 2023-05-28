@@ -34,7 +34,7 @@ export default function Success({ customerName, products }: SuccessProps) {
         <h1>Compra efetuada</h1>
         <p>
           Uhuul <strong>{customerName}</strong>, sua compra de{'\n'}
-          <strong>{products.length}</strong> camisetas já está a caminho da sua
+          <strong>{products.length}</strong> camiseta(s) já está a caminho da sua
           casa.
         </p>
 
